@@ -1,155 +1,120 @@
-# LUMI-Arch: Causal Multi-Scale Averaging
+# LUMI-Arch Research Notes
 
 ![Status](https://img.shields.io/badge/Status-Active%20Research-brightgreen)
 ![Stage](https://img.shields.io/badge/Stage-S2%20In%20Progress-blue)
 ![License](https://img.shields.io/badge/License-Research%20Only-orange)
 
-**Independent AI Architecture Research** | [@Mikeore](https://github.com/Mikeore) | 2025–2026
+**Independent AI architecture research** focused on compact language models with strong structural bias.
+
+![LUMI public snapshot](./assets/public_results_snapshot.png)
 
 ---
 
-## Abstract
+## At a glance
 
-LUMI-Arch is an independent research project investigating whether self-attention — the dominant mechanism in modern language models — is a principled choice from an information-theoretic standpoint, or merely a historical accident that became entrenched through scale. We propose **Causal Multi-Scale Averaging (CMSA)**, a replacement for self-attention grounded in the **Minimum Description Length (MDL)** principle: the hypothesis that intelligence is compression, and that a better learning machine should find shorter, more general descriptions of data. CMSA aggregates token information at multiple temporal resolutions simultaneously, forming a hierarchy from local context (scale=1) to document-level context (scale=2048), with sparse FlashAttention interleaved at low frequency for global coherence. At 300M parameters, LUMI-Arch achieves a validation BPB of **1.2341** versus the Transformer baseline's **1.4220** — a **−0.1879 BPB improvement (−13.2% relative)**, consistent across all 4 independent seeds. A 996M-parameter pilot run confirms convergence behavior holds at 1B scale.
+LUMI-Arch is an independent research program exploring whether a compact, compression-first sequence architecture can outperform a parameter-matched Transformer baseline through architectural bias rather than scale alone.
 
----
+The public record is intentionally limited to:
 
-## Architecture Concept
+- evaluation evidence
+- benchmark interpretation
+- research direction
 
-```
-Input Tokens
-     |
-     v
- ┌─────────────────────────────────────────────────────┐
- │                  CMSA Layer (×N)                    │
- │                                                     │
- │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ...     │
- │  │ Scale=1  │  │ Scale=4  │  │ Scale=16 │  ...     │
- │  │  Local   │  │  Token   │  │  Phrase  │          │
- │  │ Context  │  │  Group   │  │  Level   │          │
- │  └────┬─────┘  └────┬─────┘  └────┬─────┘          │
- │       └─────────────┴─────────────┘                 │
- │                      │                              │
- │             ┌─────────────────┐                     │
- │             │  Scale Fusion   │                     │
- │             │ (learned blend) │                     │
- │             └────────┬────────┘                     │
- └──────────────────────┼──────────────────────────────┘
-                        │
-          [Every 4th layer: Sparse FlashAttention]
-          (Global context injection, NoPE design)
-                        │
-                        v
-               Next-layer representation
-```
-
-**Scale hierarchy (1B model):** `[1, 4, 16, 64, 256, 1024, 2048]`
-
-Each scale corresponds to a different level of linguistic structure — from single tokens to full document context — without the quadratic cost of full attention.
+It does **not** expose implementation details, training recipes, or enough architectural information to reproduce the system.
 
 ---
 
-## Key Results
+## Current public evidence
 
-> **300M scale: LUMI val_bpb 1.2341 vs Transformer baseline 1.4220**
-> **Δ = −0.1879 BPB | −13.2% relative improvement | 4/4 seeds confirm**
+### 300M language modeling
 
-### Results Summary
+On a parameter-matched natural-language comparison, LUMI-Arch achieved:
 
-| Task | Scale | LUMI-Arch | Baseline | Delta | Result |
-|------|-------|-----------|----------|-------|--------|
-| Language Modeling | 300M | 1.2341 BPB | 1.4220 BPB | −0.1879 | **STRONG PASS** |
-| Language Modeling | 1B pilot | 2.1616 BPB | — | — | Converging |
-| mod_arith (grokking) | tiny | wins | — | — | **PASS** |
-| bracket_structural_holdout | tiny | wins | — | — | **PASS** |
-| dsl_distributive | tiny | wins | — | — | **PASS** |
-| boolean_logic | tiny | ongoing | — | — | in progress |
+- **1.2341 val BPB**
+- vs **1.4220** for the Transformer baseline
+- **delta = -0.1879 BPB**
+- **4/4 seeds confirmed**
+- verdict: **STRONG PASS**
 
-### 1B Pilot Convergence (C4, 2,000 of 30,000 planned steps)
+This is the strongest public result so far.
 
-| Step | C4 BPB | Note |
-|------|--------|------|
-| 0 | 3.5697 | Random initialization |
-| 250 | 2.5076 | — |
-| 500 | 2.9706 | Warmup schedule artifact (corrected in production) |
-| 750 | 2.3249 | — |
-| 1,000 | 2.2808 | — |
-| 1,250 | 2.2199 | — |
-| 1,500 | 2.1754 | — |
-| **2,000** | **2.1616** | **Pilot end — best checkpoint** |
+### 1B pilot convergence
 
-*Training ongoing. ~32.8M of 3.93B target tokens processed.*
-*Hardware: NVIDIA RTX 5090 | 20.36 GB peak VRAM | ~10,473 tok/s*
+A 996M-parameter pilot run completed successfully and reached:
 
----
+- **2.1616 C4 BPB at step 2,000**
+- **~10.5k tok/s**
+- **20.36 GB peak VRAM**
+- on a single **RTX 5090**
 
-## Research Philosophy
+This does **not** prove scale victory yet, but it does show that the recipe converges and that 1B-scale training is practical outside hyperscale infrastructure.
 
-### Compression as the Core of Intelligence
+### Structured generalization
 
-LUMI-Arch is built on the conviction that the MDL principle — *the best model is the one that compresses data most efficiently* — is not merely a training heuristic but a statement about the nature of intelligence itself.
+Earlier experiments on symbolic and compositional tasks showed repeated wins on:
 
-The theoretical anchor is the ITI (Inductive Bias of Transformers) line of work, which suggests that efficient compression mechanically selects for models that have internalized causal structure. A model that genuinely understands language should be able to compress it — not by memorizing surface patterns, but by learning the underlying generative rules.
+- `mod_arith`
+- `bracket_structural_holdout`
+- `dsl_distributive`
 
-Self-attention, from this perspective, has a structural inefficiency: it is quadratic in sequence length and unconstrained in what it attends to. It can in principle learn arbitrary token-to-token relationships, but this expressiveness comes at the cost of imposing no prior toward compression. CMSA is designed to impose that prior structurally, by forcing the model to aggregate information at discrete, exponentially spaced temporal scales — a design that mirrors how linguistic meaning actually accumulates across levels of structure.
-
-**The core claim:** A model with the right structural inductive bias should be able to learn more from less data, generalize more reliably out-of-distribution, and do so with lower computational cost. The 300M results are early evidence that this claim is empirically grounded.
+Those results motivated the scale-up program.
 
 ---
 
-## Roadmap
+## Why this matters
 
-| Stage | Description | Status |
-|-------|-------------|--------|
-| **S0** | Architecture design & MDL theoretical grounding | Done |
-| **S1** | 300M scale validation vs Transformer baseline | **Done — STRONG PASS** |
-| **S1.5** | Tiny structured task suite (G2–G4) | Done |
-| **S2** | 1B scale full training (30K steps, 3.93B tokens) | **In progress** |
-| **S3** | Ablation study: scale hierarchy, attention frequency | Planned |
-| **S4** | Benchmark suite: MMLU, GSM8K, HumanEval | Planned |
-| **S5** | Paper writeup and public release | Planned |
+The central question behind LUMI-Arch is simple:
+
+> Can the right structural inductive bias let a smaller model do meaningfully more with less?
+
+The project takes the working view that language modeling quality is not only a matter of parameter count, but also of how strongly the architecture biases the model toward useful compression and hierarchical structure.
+
+The 300M result suggests that this hypothesis is at least viable in natural language modeling, not only in synthetic or symbolic tasks.
 
 ---
 
-## What This Repository Contains
+## Public materials
 
-| Path | Contents |
-|------|----------|
-| `METHODOLOGY.md` | Conceptual explanation of CMSA and the MDL framework (no code) |
-| `results/300m_scale_comparison.md` | Full 300M experimental results |
-| `results/1b_pilot_convergence.md` | 1B pilot convergence data and analysis |
-| `results/structured_tasks.md` | G2–G4 structured task results |
-| `data/300m_comparison.json` | Machine-readable 300M result data |
-| `data/1b_pilot_results.json` | Machine-readable 1B pilot data |
-| `assets/` | Visualizations and convergence plots |
-| `plot_results.py` | Visualization script (reads from `data/`, outputs to `assets/`) |
-
-## What This Repository Does NOT Contain
-
-This repository deliberately omits all implementation details. Specifically absent:
-
-- Model source code (`.py` files with architecture logic)
-- Training loop implementation
-- Optimizer configuration and initialization details
-- The internal mechanics of scale aggregation
-- Gate mechanism design
-- Any information sufficient to reproduce the architecture from this repository alone
-
-The results reported here are real and reproducible — but only with access to the full codebase, which is not public at this stage of research.
+| Path | Description |
+|---|---|
+| [public_results_snapshot.md](./public_results_snapshot.md) | One-page public summary for compute / partner outreach |
+| [sanity_check_note_public.md](./sanity_check_note_public.md) | Early small-scale natural-language sanity check |
+| [results/300m_scale_comparison.md](./results/300m_scale_comparison.md) | 300M parameter-matched comparison |
+| [results/1b_pilot_convergence.md](./results/1b_pilot_convergence.md) | 1B pilot convergence note |
+| [results/structured_tasks.md](./results/structured_tasks.md) | Structured-task benchmark summary |
+| [data/300m_comparison.json](./data/300m_comparison.json) | Machine-readable 300M result data |
+| [data/1b_pilot_results.json](./data/1b_pilot_results.json) | Machine-readable 1B pilot data |
 
 ---
 
-## Contact & Citation
+## What is intentionally not public
 
-**Project:** LUMI-Arch (independent research, 2025–2026)
-**Repository:** https://github.com/Mikeore/lumi-arch-research
+This repository does **not** contain:
 
-If you reference this work, please cite:
+- model source code
+- architecture implementation
+- training loop details
+- hyperparameter sweeps
+- optimizer / initialization specifics
+- full recipes for reproducing the reported system
+- checkpoints or weights
 
-```
-Mikeore. "LUMI-Arch: Causal Multi-Scale Averaging for
-Sub-Quadratic Language Modeling." Independent research report, 2026.
-https://github.com/Mikeore/lumi-arch-research
-```
+The goal of this repository is to establish **evidence and direction**, not to open-source the full internal research workflow at this stage.
 
-*This is independent research. No institutional affiliation.*
+---
+
+## Current status
+
+- **S1 complete:** 300M scale check passed strongly
+- **S2 in progress:** 1B scale-up and recipe validation
+- **Next public milestone:** full 1B run and broader benchmark evidence
+
+---
+
+## Contact
+
+**Project:** LUMI-Arch  
+**Author:** [@Mikeore](https://github.com/Mikeore)  
+**Scope:** independent research, 2025–2026
+
+If you're interested in compute support, collaboration, or benchmarking discussion, feel free to reach out via GitHub.
