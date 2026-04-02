@@ -7,7 +7,9 @@
 
 ## Core claim
 
-LUMI-Arch is testing whether a compact, compression-first architecture can beat a parameter-matched Transformer baseline through architectural bias rather than brute-force scale.
+LUMI-Arch is testing whether a compact, compression-first architecture can
+remain competitive enough to justify continued scale-up and structured-data
+experiments through architectural bias rather than brute-force scale alone.
 
 This repository exposes **evidence**, not implementation.
 
@@ -15,34 +17,32 @@ This repository exposes **evidence**, not implementation.
 
 ## Public evidence so far
 
-### 300M scale language modeling
+### Public compact-LM sanity result
 
-- Dataset: FineWeb-Edu 10BT
+- Dataset: WikiText-103
 - Metric: validation BPB
-- Setting: parameter-matched comparison against a standard Transformer baseline
+- Setting: compact LUMI-family mixer vs parameter-matched Transformer baseline
 
 **Result**
 
-- LUMI-Arch: **1.2341**
-- Transformer baseline: **1.4220**
-- Delta: **-0.1879 BPB**
-- Relative improvement: **-13.2%**
-- Seed consistency: **4/4 seeds**
-- Verdict: **STRONG PASS**
+- LUMI-family branch: **1.7411**
+- Transformer baseline: **1.6599**
+- Delta: **+0.0812 BPB**
+- Verdict: **WEAK PASS** under the branch's preset tolerance criterion
 
-### 1B pilot
+Interpretation: this is a proof that the sequence mechanism is plausible enough
+to keep investing in, not a claim of broad superiority.
 
-- Model size: **996M parameters**
-- Run length: **2,000 steps**
-- Device: **single RTX 5090**
+### Current private diagnostics (high level only)
 
-**Observed**
+Private runs at larger scale have already made two things clearer:
 
-- C4 BPB at step 2,000: **2.1616**
-- Throughput: **~10.5k tok/s**
-- Peak VRAM: **20.36 GB**
+- natural-language compression remains the cleanest public-positive signal
+- ARC-style reasoning is currently bottlenecked more by supervision and
+  curriculum design than by raw willingness to scale
 
-Interpretation: the recipe converges at 1B scale and can be piloted on accessible hardware, but full validation still requires longer runs.
+Those diagnostics are intentionally summarized without recipe detail or
+reproduction-enabling implementation.
 
 ### Structured-task record
 
@@ -60,15 +60,16 @@ These experiments motivated the current language-model scale-up.
 
 ### It supports
 
-- the architecture is not just a toy symbolic result
-- the 300M natural-language result is meaningful
-- the 1B recipe is trainable in practice
+- the architecture direction is not only a toy symbolic result
+- the compact LM sanity result is meaningful enough to justify more testing
+- the project has moved from vague idea stage into evidence-backed diagnostics
 
 ### It does not yet prove
 
-- superiority at 1B full-run scale
+- superiority at larger full-run scale
 - broad downstream superiority over major open models
 - instruction tuning or agent capability
+- reproducibility of the internal system from public materials alone
 
 ---
 
@@ -82,6 +83,28 @@ Most modern LMs rely on scale plus standard attention. LUMI-Arch asks whether a 
 - competitive scaling behavior at smaller model sizes
 
 That is the research bet.
+
+---
+
+## Why compute support matters
+
+The main bottleneck right now is not a shortage of hypotheses.  It is the cost
+of running enough carefully chosen experiments to separate:
+
+- architecture effects
+- curriculum / supervision effects
+- data-mixture effects
+- language-diversity effects
+
+Additional compute would go into:
+
+1. compact LM replications on stronger corpora
+2. broad-structure training pilots
+3. multilingual compression pilots
+
+This snapshot is designed to help potential supporters judge whether the
+research direction is interesting enough to warrant those experiments, without
+making the underlying system reproducible.
 
 ---
 

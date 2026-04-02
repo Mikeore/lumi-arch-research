@@ -1,7 +1,7 @@
 # LUMI-Arch Research Notes
 
 ![Status](https://img.shields.io/badge/Status-Active%20Research-brightgreen)
-![Stage](https://img.shields.io/badge/Stage-S2%20In%20Progress-blue)
+![Stage](https://img.shields.io/badge/Stage-Active%20Diagnostics-blue)
 ![License](https://img.shields.io/badge/License-Research%20Only-orange)
 
 **Independent AI architecture research** focused on compact language models with strong structural bias.
@@ -26,28 +26,33 @@ It does **not** expose implementation details, training recipes, or enough archi
 
 ## Current public evidence
 
-### 300M language modeling
+### Compact LM sanity evidence
 
-On a parameter-matched natural-language comparison, LUMI-Arch achieved:
+On a controlled small-scale natural-language comparison, a LUMI-family mixer
+showed competitive behavior against a parameter-matched Transformer baseline:
 
-- **1.2341 val BPB**
-- vs **1.4220** for the Transformer baseline
-- **delta = -0.1879 BPB**
-- **4/4 seeds confirmed**
-- verdict: **STRONG PASS**
+- LUMI-family sanity branch: **1.7411 val BPB**
+- Transformer baseline: **1.6599 val BPB**
+- delta: **+0.0812 BPB**
+- verdict: **WEAK PASS within preset tolerance**
 
-This is the strongest public result so far.
+This does **not** claim state-of-the-art quality.  It supports a narrower point:
+the compact sequence mechanism remains viable enough to justify continued
+research rather than being ruled out immediately.
 
-### 1B pilot convergence
+### Large-scale training feasibility
 
-A 996M-parameter pilot run completed successfully and reached:
+Recent private experiments indicate that the broader research program can be
+trained at substantially larger scale, and that its failure modes are now
+better understood:
 
-- **2.1616 C4 BPB at step 2,000**
-- **~10.5k tok/s**
-- **20.36 GB peak VRAM**
-- on a single **RTX 5090**
+- compact language modeling remains the strongest current signal
+- ARC-style reasoning remains bottlenecked by supervision and curriculum design
+- some regularized variants collapse into shallow shortcuts rather than genuine
+  content generation
 
-This does **not** prove scale victory yet, but it does show that the recipe converges and that 1B-scale training is practical outside hyperscale infrastructure.
+This repository intentionally summarizes those findings only at a high level.
+It does **not** expose the implementation detail required to reproduce them.
 
 ### Structured generalization
 
@@ -69,7 +74,9 @@ The central question behind LUMI-Arch is simple:
 
 The project takes the working view that language modeling quality is not only a matter of parameter count, but also of how strongly the architecture biases the model toward useful compression and hierarchical structure.
 
-The 300M result suggests that this hypothesis is at least viable in natural language modeling, not only in synthetic or symbolic tasks.
+The current evidence suggests that this hypothesis remains alive in language
+modeling, not only in symbolic settings, but the project is still in a
+diagnostic phase rather than a finished “proved at scale” state.
 
 ---
 
@@ -103,11 +110,49 @@ The goal of this repository is to establish **evidence and direction**, not to o
 
 ---
 
+## Compute support
+
+This project is currently constrained much more by **compute budget** than by
+the ability to generate new hypotheses.
+
+Additional compute would be used for tightly scoped diagnostics, not for a
+blind brute-force scale chase.  The highest-priority next experiments are:
+
+1. compact LM sanity replications on larger and cleaner text corpora
+2. broad-structure pretraining pilots that test math / puzzle / structured
+   transfer without exposing private implementation details
+3. multilingual compression pilots that probe whether language diversity helps
+   abstraction formation
+
+What is **not** being offered here:
+
+- no weights
+- no training recipe sufficient for reproduction
+- no hidden implementation disclosure on request
+
+What **is** being offered:
+
+- a legible public research record
+- concrete experiment plans
+- negative-result analysis and failure-mode documentation
+- a compact, unusual architecture direction with early evidence worth testing
+
+If you're evaluating support, the best framing is:
+
+> LUMI-Arch is an independent compact-model research program with promising
+> efficiency signals, unusually clear failure analysis, and a compute bottleneck
+> that is now more limiting than idea generation.
+
+---
+
 ## Current status
 
-- **S1 complete:** 300M scale check passed strongly
-- **S2 in progress:** 1B scale-up and recipe validation
-- **Next public milestone:** full 1B run and broader benchmark evidence
+- **compact LM sanity branch:** completed, weak-pass signal obtained
+- **private scale diagnostics:** active
+- **current research focus:** diagnosing supervision / curriculum bottlenecks,
+  broad-structure training, and multilingual compression
+- **next public milestone:** a cleaner public-facing summary of which hypotheses
+  survived the latest diagnostics
 
 ---
 
@@ -117,4 +162,5 @@ The goal of this repository is to establish **evidence and direction**, not to o
 **Author:** [@Mikeore](https://github.com/Mikeore)  
 **Scope:** independent research, 2025–2026
 
-If you're interested in compute support, collaboration, or benchmarking discussion, feel free to reach out via GitHub.
+If you're interested in compute support, collaboration, or benchmarking
+discussion, feel free to reach out via GitHub.
