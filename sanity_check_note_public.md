@@ -1,90 +1,55 @@
-# LUMI-Arch: Natural Language LM Sanity Check
+# Archived Natural-Language Sanity Check
+
 **Date:** 2026-03-26
-**Status:** WEAK PASS
+**Status:** archived early sanity result
+**Disclosure level:** public-safe summary
+
+This was an early compact language-model sanity check. It is preserved for historical continuity, but it is no longer the headline public result.
+
+The newer public-facing evidence is summarized in:
+
+- [`README.md`](./README.md)
+- [`public_results_snapshot.md`](./public_results_snapshot.md)
+- [`results/300m_scale_comparison.md`](./results/300m_scale_comparison.md)
+- [`results/2026_04_public_diagnostics.md`](./results/2026_04_public_diagnostics.md)
 
 ---
 
 ## What was tested
 
-A compact architecture research direction (LUMI-Arch) was evaluated against a
-standard causal Transformer baseline on autoregressive language modeling.
+A compact LUMI-family branch was compared with a parameter-matched Transformer-style baseline on a small natural-language language-modeling sanity check.
 
-The core hypothesis: *an alternative compact sequence mechanism can match
-standard self-attention in next-token prediction quality at small scale.*
+The purpose was simple:
 
----
-
-## Setup
-
-| | LUMI-Arch | Baseline |
-|---|---|---|
-| Sequence mechanism | compact structure-aware mixer | causal multi-head attention |
-| Core parameter budget | smaller | standard |
-| Layers | 4 | 4 |
-| Model width | matched | matched |
-| Per-layer complexity | sub-quadratic | O(n²) |
-
-- Dataset: WikiText-103 (GPT-2 tokenizer)
-- Steps: 5,000
-- Hardware: single consumer GPU (8 GB VRAM)
+> Rule out the possibility that the architecture direction immediately fails at basic next-token prediction.
 
 ---
 
-## Results
+## Public result
 
-### Final val BPB (bits per byte, lower = better)
+| Model family | Validation BPB |
+|---|---:|
+| LUMI-family early branch | **1.741** |
+| matched baseline | **1.660** |
+| delta | **+0.081** |
+| archived verdict | viability-only historical result |
 
-| Model | val BPB |
-|---|---|
-| LUMI-Arch | **1.741** |
-| Baseline | 1.660 |
-| Δ | **+0.081** |
-
-**Pass threshold:** ±0.10 BPB
-**Verdict: WEAK PASS**
+This was not a win over the baseline. It was a viability check.
 
 ---
 
-## Learning curve
+## Current interpretation
 
-| Step | LUMI BPB | BASE BPB | Gap |
-|---|---|---|---|
-| 500 | 2.286 | 1.970 | +0.316 |
-| 1,000 | 2.031 | 1.867 | +0.164 |
-| 2,000 | 1.858 | 1.760 | +0.098 |
-| 3,000 | 1.794 | 1.715 | +0.079 |
-| 5,000 | **1.741** | **1.660** | **+0.081** |
+This result should be read as historical context only.
 
-Gap narrows from **+0.32 → +0.08** over training and stabilizes.
+It showed that the early branch was not immediately disqualified for basic language modeling, but the project has since moved to stronger public evidence:
+
+- a 300M matched compression result
+- a near-1B convergence pilot
+- newer private structural-transfer diagnostics
 
 ---
 
-## Key observations
+## What remains intentionally omitted
 
-- The architecture runs efficiently on the tested hardware
-- The gap reduction trend is consistent with the hypothesis that the mechanism
-  adapts to corpus statistics over training
-- LUMI-Arch achieves this with a smaller core parameter budget than the baseline
-
----
-
-## What this does not show
-
-- Performance at scale (>1B parameters)
-- Instruction-following or reasoning capability
-- Long-context behavior (seq=256 only)
-- Comparison against other efficient sequence architectures
-
-This is a **proof-of-concept** at toy scale.
-The hypothesis remains viable at this scale. Full validation requires further scale-up.
-
----
-
-## Relation to prior results
-
-This natural-language LM result extends the earlier structured-task benchmark
-record (mod_arith, bracket_structural_holdout, dsl_distributive) to a standard
-language modeling setting.
-
-The same research direction that showed consistent structural OOD generalization
-on symbolic tasks also passes the natural-language sanity gate within tolerance.
+This archived note omits implementation details, exact architecture mechanics, training recipes, and reproduction-level configuration.
