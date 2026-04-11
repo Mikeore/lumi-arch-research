@@ -1,27 +1,26 @@
 {
-  "experiment": "LUMI-Arch 1B Pilot",
+  "experiment": "LUMI-Arch public-safe near-1B pilot",
   "date": "2026-03-30",
+  "disclosure_level": "public_safe_summary",
+  "notes": [
+    "This file reports convergence evidence only.",
+    "Exact architecture internals, training recipe, sequence configuration, and reproduction-critical details are intentionally withheld."
+  ],
   "model": {
-    "name": "LUMI-Arch 1B",
-    "parameters_total": "996M",
-    "d_model": 2048,
-    "layers": 22,
-    "scales": [1, 4, 16, 64, 256, 1024, 2048]
+    "parameter_class": "near_1b",
+    "parameters_total_public": "996M"
   },
   "training": {
-    "steps_run": 2000,
-    "steps_planned": 30000,
-    "tokens_processed": "32.8M",
-    "tokens_planned": "3.93B",
-    "seq_len": 2048,
-    "hardware": "RTX 5090",
+    "run_type": "early convergence pilot",
+    "steps_run_public": 2000,
+    "hardware_public": "single high-end consumer GPU",
     "peak_vram_gb": 20.36,
     "throughput_tok_per_s": 10473
   },
   "convergence": [
     {"step": 0, "c4_bpb": 3.5697, "note": "random initialization"},
     {"step": 250, "c4_bpb": 2.5076},
-    {"step": 500, "c4_bpb": 2.9706, "note": "warmup schedule artifact"},
+    {"step": 500, "c4_bpb": 2.9706, "note": "warmup artifact"},
     {"step": 750, "c4_bpb": 2.3249},
     {"step": 1000, "c4_bpb": 2.2808},
     {"step": 1250, "c4_bpb": 2.2199},
@@ -33,5 +32,10 @@
     "hellaswag_0shot": 0.226,
     "arc_easy_0shot": 0.273,
     "lambada_accuracy": 0.0
+  },
+  "interpretation": {
+    "positive_signal": "near-1B pilot converged stably in early training",
+    "limitation": "pilot budget is far too small for final capability claims",
+    "research_status": "feasibility_signal_not_finished_benchmark"
   }
 }

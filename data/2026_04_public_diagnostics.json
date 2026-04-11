@@ -1,0 +1,56 @@
+{
+  "experiment": "LUMI-Arch public-safe April 2026 diagnostics",
+  "date": "2026-04-10",
+  "disclosure_level": "public_safe_summary",
+  "notes": [
+    "This file reports evaluation evidence only.",
+    "Implementation details, training recipes, data mixture details, checkpoints, and reproduction-critical architecture internals are intentionally withheld."
+  ],
+  "diagnostic_branch": {
+    "description": "66.5M-parameter private compression-bottleneck diagnostic branch",
+    "parameters_total": 66498096,
+    "training_budget": "public-safe: 20K-step diagnostic run",
+    "architecture_details": "withheld"
+  },
+  "internal_structural_eval": {
+    "text_bpb": 1.8306269333857288,
+    "content_token_accuracy": 0.6936323588305967,
+    "structure_token_accuracy": 0.9951456310679612,
+    "sequence_accuracy": 0.1625,
+    "row_accuracy": 0.3764135702746365,
+    "cross_format_content_accuracy": 0.5898931000971818,
+    "cross_format_sequence_accuracy": 0.3333333333333333,
+    "holdout_content_accuracy": 0.5714285714285714,
+    "holdout_sequence_accuracy": 0.06666666666666667
+  },
+  "external_lm_eval": {
+    "hellaswag": {
+      "accuracy": 0.2771360286795459,
+      "accuracy_normalized": 0.29177454690300736
+    },
+    "piqa": {
+      "accuracy": 0.5364526659412405,
+      "accuracy_normalized": 0.529379760609358
+    },
+    "arc_easy": {
+      "accuracy": 0.26851851851851855,
+      "accuracy_normalized": 0.27146464646464646
+    },
+    "arc_challenge": {
+      "accuracy": 0.1766211604095563,
+      "accuracy_normalized": 0.22696245733788395
+    },
+    "winogrande": {
+      "accuracy": 0.5067087608524072
+    },
+    "lambada_openai": {
+      "accuracy": 0.04036483601785368,
+      "perplexity": 2720.1317435541396
+    }
+  },
+  "interpretation": {
+    "positive_signal": "The diagnostic branch shows strong internal structural transfer and non-random performance on several external language-model evaluations.",
+    "limitation": "The branch is not yet a broadly strong assistant model; long-context and broad world-knowledge evaluations remain weak.",
+    "research_status": "promising_diagnostics_not_reproducible_release"
+  }
+}

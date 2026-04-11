@@ -1,120 +1,87 @@
 # LUMI-Arch Public Results Snapshot
 
 **Status:** active independent research  
-**Focus:** compact architecture exploration for efficient language modeling and structural generalization
+**Focus:** compact architectures, compression pressure, structural transfer, and public-safe diagnostics
 
 ---
 
 ## Core claim
 
-LUMI-Arch is testing whether a compact, compression-first architecture can
-remain competitive enough to justify continued scale-up and structured-data
-experiments through architectural bias rather than brute-force scale alone.
+LUMI-Arch is testing whether stronger compression and structural training pressure can improve capability per unit of compute in compact language models.
 
-This repository exposes **evidence**, not implementation.
+This public repository exposes evidence and interpretation. It does not expose implementation details, recipes, checkpoints, or enough architecture detail to reproduce the internal system.
 
 ---
 
-## Public evidence so far
+## Evidence table
 
-### Public compact-LM sanity result
-
-- Dataset: WikiText-103
-- Metric: validation BPB
-- Setting: compact LUMI-family mixer vs parameter-matched Transformer baseline
-
-**Result**
-
-- LUMI-family branch: **1.7411**
-- Transformer baseline: **1.6599**
-- Delta: **+0.0812 BPB**
-- Verdict: **WEAK PASS** under the branch's preset tolerance criterion
-
-Interpretation: this is a proof that the sequence mechanism is plausible enough
-to keep investing in, not a claim of broad superiority.
-
-### Current private diagnostics (high level only)
-
-Private runs at larger scale have already made two things clearer:
-
-- natural-language compression remains the cleanest public-positive signal
-- ARC-style reasoning is currently bottlenecked more by supervision and
-  curriculum design than by raw willingness to scale
-
-Those diagnostics are intentionally summarized without recipe detail or
-reproduction-enabling implementation.
-
-### Structured-task record
-
-Earlier stages showed repeated wins on:
-
-- `mod_arith`
-- `bracket_structural_holdout`
-- `dsl_distributive`
-
-These experiments motivated the current language-model scale-up.
+| Track | Public-safe result | Why it matters |
+|---|---:|---|
+| 300M matched compression test | LUMI-family **1.2341 BPB** vs Transformer **1.4220 BPB** | Strong controlled signal that the architecture family can compress better than a matched baseline. |
+| Seed consistency | **4 / 4** seeds favored LUMI-family | Reduces the chance that the 300M result is a lucky seed. |
+| 1B pilot | **996M** parameter pilot reached **2.1616 C4 BPB** at 2K steps | Shows near-1B training is operationally feasible, but not a full-run quality claim. |
+| 66.5M 2026 private diagnostic branch | structural transfer **0.590**, text BPB **1.831** | Indicates newer internal diagnostics improved transfer while preserving language-modeling signal. |
+| External reality check | HellaSwag **0.292**, PIQA **0.529**, ARC-Challenge **0.227** | Shows non-random behavior, while making clear that broad assistant-grade competence is not yet established. |
 
 ---
 
-## What this snapshot does and does not claim
+## What the evidence supports
 
-### It supports
+- The research direction has moved beyond a toy symbolic result.
+- The 300M compression result is a meaningful public signal.
+- The newer private diagnostics suggest structural transfer is improving.
+- The project has enough instrumentation to distinguish progress from several shortcut failures.
 
-- the architecture direction is not only a toy symbolic result
-- the compact LM sanity result is meaningful enough to justify more testing
-- the project has moved from vague idea stage into evidence-backed diagnostics
+## What the evidence does not yet prove
 
-### It does not yet prove
-
-- superiority at larger full-run scale
-- broad downstream superiority over major open models
-- instruction tuning or agent capability
-- reproducibility of the internal system from public materials alone
+- It does not prove state-of-the-art language-model quality.
+- It does not prove assistant/chat capability.
+- It does not prove broad downstream superiority over open baselines.
+- It does not make the internal system reproducible from public materials.
 
 ---
 
-## Why this project is interesting
+## Current interpretation
 
-Most modern LMs rely on scale plus standard attention. LUMI-Arch asks whether a stronger structural bias can deliver:
+The strongest current working hypothesis is:
 
-- better compression
-- better data efficiency
-- better structural generalization
-- competitive scaling behavior at smaller model sizes
+> LUMI's compression mechanism is valuable as a training pressure that improves internal representations and transfer, even when the compressed state is not exposed as a standalone public artifact.
 
-That is the research bet.
+This is an empirical hypothesis, not a settled claim. The next stage is to test whether the signal survives larger scale and broader data mixtures.
 
 ---
 
 ## Why compute support matters
 
-The main bottleneck right now is not a shortage of hypotheses.  It is the cost
-of running enough carefully chosen experiments to separate:
+The main bottleneck is controlled GPU time for comparison work.
 
-- architecture effects
-- curriculum / supervision effects
-- data-mixture effects
-- language-diversity effects
+The important next experiments are not blind scale runs. They are separated tests of:
 
-Additional compute would go into:
-
-1. compact LM replications on stronger corpora
-2. broad-structure training pilots
-3. multilingual compression pilots
-
-This snapshot is designed to help potential supporters judge whether the
-research direction is interesting enough to warrant those experiments, without
-making the underlying system reproducible.
+| Question | Required evidence |
+|---|---|
+| Does structural transfer scale? | 100M+ and 1B+ runs with the same public-safe metrics. |
+| Does broader data improve general ability? | External benchmarks and chat/code/math diagnostics, not only internal structural tasks. |
+| Does instruction tuning preserve base capability? | Mixed continuation SFT branches with internal and external retention gates. |
+| Are failures architectural or curricular? | Controlled ablations with one major variable changed at a time. |
 
 ---
 
-## Repository policy
+## Disclosure policy
 
-This public repository intentionally omits:
+Shared:
 
-- source implementation
-- detailed architecture mechanics
-- training recipes
+- public-safe result summaries
+- benchmark interpretation
+- failure-mode notes
+- compute needs
+
+Withheld:
+
+- source code
 - checkpoints and weights
+- exact architecture internals
+- training recipes
+- private data mixtures
+- hyperparameter sweeps
 
-The goal is to make the evidence legible without making the internal research workflow reproducible.
+This boundary is intentional. The goal is to make the research credible without making it easy to clone prematurely.
