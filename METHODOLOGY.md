@@ -22,6 +22,7 @@ The public record separates three kinds of evidence.
 |---|---|---|
 | Compression | BPB on held-out text | Can the model encode language efficiently? |
 | Structural transfer | held-out structural / format-transfer diagnostics | Does structure learned in one form transfer to another? |
+| Context efficiency | private long-dependency diagnostics | Can a compact byte-level model make better use of limited raw context? |
 | External reality checks | HellaSwag, PIQA, ARC-style LM evals | Is the model learning anything beyond private diagnostics? |
 
 No single metric is treated as decisive. A result is interesting only if it improves one axis without obviously destroying the others.
@@ -69,6 +70,7 @@ This repository intentionally avoids:
 - internal hyperparameter choices
 - data-mixture details
 - checkpoints and weights
+- mechanism names or ablation labels when those would reveal the private approach
 
 Instead, it shares:
 
@@ -95,6 +97,9 @@ A public result is treated as stronger when it satisfies more of the following:
 
 The 300M matched comparison is currently the strongest public compression result. The 1B pilot is a feasibility signal, not a completed benchmark claim. The 2026 diagnostic branch is public-safe evidence of newer internal progress, not a reproduction release.
 
+A newer private context-efficiency track is reported only at the level of
+motivation and evaluation categories. The mechanism is intentionally withheld.
+
 ---
 
 ## 7. What would count as stronger evidence
@@ -105,6 +110,7 @@ The next evidence tier would require:
 |---|---|
 | 100M+ scale confirmation | same diagnostics, larger model, controlled comparison |
 | 1B+ full run | full training curve and external benchmark suite |
+| context-efficiency confirmation | aggregate longer-dependency gains without base BPB regression |
 | general capability claim | text, code, math, reasoning, and conversation evaluations |
 | instruction-tuned branch | chat improvement while preserving base internal and external metrics |
 

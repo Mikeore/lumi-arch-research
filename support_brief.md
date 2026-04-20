@@ -33,10 +33,12 @@ The project has moved beyond idea stage.
 | 1B pilot feasibility | **996M** parameter pilot reached stable early convergence |
 | 2026 private diagnostic branch | internal structural transfer **0.590**, text BPB **1.831** |
 | external reality check | HellaSwag **0.292**, PIQA **0.529**, ARC-Challenge **0.227** |
+| current private track | context-efficiency diagnostics for compact byte-level models |
 
 The honest interpretation is:
 
 - compression and structural-transfer signals are real enough to justify more compute
+- a newer private track is testing context efficiency without exposing the mechanism
 - broad assistant-grade capability is not yet established
 - the next stage must test scale, data breadth, and instruction behavior without losing base capability
 
@@ -77,9 +79,10 @@ Useful support would fund targeted experiments, not a blind scale chase:
 
 1. 100M+ runs to test whether structural-transfer gains survive scale.
 2. 1B+ runs to test whether compression pressure continues to improve general representation learning.
-3. broader text/code/math/reasoning data tests to avoid building a narrow puzzle machine.
-4. instruction-tuning branches that must preserve base ability rather than merely sounding conversational.
-5. external benchmark reruns after every important branch.
+3. context-efficiency diagnostics for compact byte-level models.
+4. broader text/code/math/reasoning data tests to avoid building a narrow puzzle machine.
+5. instruction-tuning branches that must preserve base ability rather than merely sounding conversational.
+6. external benchmark reruns after every important branch.
 
 Even modest compute support would matter because the project is already set up around controlled comparisons and negative-result analysis.
 
@@ -93,6 +96,7 @@ LUMI-Arch is unusual in a useful way:
 - It has a clear disclosure boundary, so support does not require immediate IP exposure.
 - It is compute-limited more than hypothesis-limited.
 - It is testing an architecture direction that is different from simply scaling the standard recipe.
+- It can provide public-safe reports without publishing source, weights, recipes, or reproduction-critical internals.
 
 The best framing is:
 

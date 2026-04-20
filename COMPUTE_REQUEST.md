@@ -14,6 +14,11 @@ Repository:
 
 <https://github.com/Mikeore/lumi-arch-research>
 
+Current public-safe priority: a private context-efficiency track for compact
+byte-level models. It tests whether compression-oriented training pressure can
+improve usable context across longer dependencies while preserving base language
+modeling. The mechanism and implementation remain private.
+
 ---
 
 ## Why this may be worth supporting
@@ -25,6 +30,7 @@ Repository:
 | near-1B feasibility | **996M** pilot reached stable early convergence |
 | newer private diagnostic signal | 66.5M branch reached structural transfer **0.590** and text BPB **1.831** |
 | external reality check | HellaSwag **0.292**, PIQA **0.529**, ARC-Challenge **0.227** |
+| current private track | context-efficiency diagnostics for compact byte-level modeling |
 
 The honest state is: promising diagnostics, not a finished assistant model.
 
@@ -36,6 +42,7 @@ The honest state is: promising diagnostics, not a finished assistant model.
 |---|---|
 | 100M+ controlled continuation | test whether structural-transfer gains survive scale |
 | 1B+ controlled run | test whether compression pressure improves general representation learning at larger scale |
+| context-efficiency private track | test whether compact byte-level models can use context more efficiently without exposing the mechanism |
 | broader data-mixture branches | test whether text/code/math/reasoning improve together rather than overfitting one private task |
 | instruction-tuning branch | test whether chat ability can be added without erasing base capabilities |
 | external benchmark reruns | prevent private-metric overfitting |
@@ -81,6 +88,10 @@ The public repository is here:
 The short version is that the project has produced public-safe evidence worth testing further: a 300M matched compression result where a LUMI-family model reached 1.2341 BPB versus 1.4220 BPB for a matched Transformer baseline, 4/4 seed consistency, a near-1B pilot showing stable early convergence, and newer private diagnostics showing stronger structural-transfer behavior.
 
 I am not asking for support for a blind scale run. The immediate goal is a controlled set of 100M+ and 1B+ experiments to test whether the transfer signal survives scale, whether broader text/code/math data improves general ability, and whether instruction-style behavior can be added without damaging base capabilities.
+
+A current private branch also tests context efficiency in compact byte-level
+models: whether compression-oriented training pressure can improve usable
+longer-dependency behavior without simply publishing a larger-context recipe.
 
 At this stage I am intentionally not publishing source code, checkpoints, training recipes, or reproduction-level architecture details. I can provide public-safe experiment reports, benchmark summaries, failure analysis, and compute-use summaries.
 

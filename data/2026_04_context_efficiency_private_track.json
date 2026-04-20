@@ -1,0 +1,35 @@
+{
+  "experiment": "LUMI-Arch context-efficiency private track",
+  "date": "2026-04-20",
+  "disclosure_level": "public_safe_track_summary",
+  "status": "private_diagnostic_track",
+  "notes": [
+    "This file records the existence and public-safe motivation of a private diagnostic track.",
+    "It intentionally omits source code, architecture internals, training recipes, data mixtures, checkpoints, and reproduction-critical metrics."
+  ],
+  "motivation": "Compact byte-level models can spend raw context faster than subword-token systems. This track tests whether compression-oriented training pressure can improve usable context efficiency while preserving base language-model behavior.",
+  "public_safe_questions": [
+    "Can compact byte-level models use context more efficiently?",
+    "Can context-efficiency improve without harming held-out BPB or external language-model checks?",
+    "Does structural transfer survive broader training?",
+    "Are observed failures architectural, curricular, or compute-limited?"
+  ],
+  "public_outputs_when_available": [
+    "public-safe aggregate result summaries",
+    "held-out BPB direction",
+    "external evaluation summaries",
+    "failure-mode interpretation",
+    "compute-use summaries"
+  ],
+  "withheld": [
+    "source implementation",
+    "exact mechanism",
+    "architecture internals",
+    "internal state representation",
+    "model configuration",
+    "training recipe",
+    "private data mixture",
+    "checkpoints or weights",
+    "reproduction-critical metric names"
+  ]
+}

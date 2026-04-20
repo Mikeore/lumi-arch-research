@@ -22,6 +22,7 @@ This public repository exposes evidence and interpretation. It does not expose i
 | 1B pilot | **996M** parameter pilot reached **2.1616 C4 BPB** at 2K steps | Shows near-1B training is operationally feasible, but not a full-run quality claim. |
 | 66.5M 2026 private diagnostic branch | structural transfer **0.590**, text BPB **1.831** | Indicates newer internal diagnostics improved transfer while preserving language-modeling signal. |
 | External reality check | HellaSwag **0.292**, PIQA **0.529**, ARC-Challenge **0.227** | Shows non-random behavior, while making clear that broad assistant-grade competence is not yet established. |
+| Context-efficiency private track | public-safe motivation only | Tests whether compact byte-level models can use limited raw context more effectively without publishing the mechanism. |
 
 ---
 
@@ -30,6 +31,7 @@ This public repository exposes evidence and interpretation. It does not expose i
 - The research direction has moved beyond a toy symbolic result.
 - The 300M compression result is a meaningful public signal.
 - The newer private diagnostics suggest structural transfer is improving.
+- A newer private track targets context efficiency while keeping the mechanism private.
 - The project has enough instrumentation to distinguish progress from several shortcut failures.
 
 ## What the evidence does not yet prove
@@ -60,6 +62,7 @@ The important next experiments are not blind scale runs. They are separated test
 | Question | Required evidence |
 |---|---|
 | Does structural transfer scale? | 100M+ and 1B+ runs with the same public-safe metrics. |
+| Does context efficiency improve? | Aggregate private long-dependency diagnostics without base BPB regression. |
 | Does broader data improve general ability? | External benchmarks and chat/code/math diagnostics, not only internal structural tasks. |
 | Does instruction tuning preserve base capability? | Mixed continuation SFT branches with internal and external retention gates. |
 | Are failures architectural or curricular? | Controlled ablations with one major variable changed at a time. |

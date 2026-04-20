@@ -8,6 +8,8 @@
 
 This repository is a public research record. It is designed to make the evidence legible without exposing implementation details, training recipes, checkpoints, or reproduction-critical architecture internals.
 
+**Last updated:** 2026-04-20
+
 ---
 
 ## Short version
@@ -21,6 +23,7 @@ The current public record supports three claims:
 | The direction is not just a symbolic toy | Supported | Earlier structured-task wins motivated scale-up. |
 | The architecture family can beat a matched Transformer on a controlled 300M compression test | Supported | 300M LUMI-family run reached **1.2341 BPB** vs **1.4220 BPB** for the matched Transformer baseline. |
 | Larger training is feasible, but the program is still diagnostic | Supported | A 996M pilot reached stable early convergence, but it was not a full benchmark run. |
+| A newer context-efficiency direction is active | Private diagnostic track | Current private work studies whether compact byte-level models can use context more efficiently without publishing the mechanism. |
 
 The current public record does **not** claim state-of-the-art assistant ability, open reproduction, or a solved general-reasoning system.
 
@@ -66,6 +69,23 @@ That hypothesis is still being tested. The public evidence says the direction is
 
 ---
 
+## Current private direction
+
+A newer private track is testing context efficiency in compact byte-level models.
+The motivation is simple: byte-level systems avoid tokenizer dependence, but they
+can spend raw context faster than subword-token systems.
+
+The public-safe question is:
+
+> Can compression-oriented training pressure improve usable context across longer dependencies without destroying base language-model behavior?
+
+This repository will report only high-level motivation, evaluation categories,
+and aggregate public-safe results when available. It will not disclose the
+mechanism, implementation, exact architecture internals, recipes, data mixtures,
+checkpoints, or reproduction-critical metrics.
+
+---
+
 ## Disclosure boundary
 
 To reduce imitation risk, this repository intentionally shares:
@@ -90,13 +110,16 @@ If you are evaluating the project for compute support or collaboration, the inte
 | [support_brief.md](./support_brief.md) | Short compute-support brief |
 | [COMPUTE_REQUEST.md](./COMPUTE_REQUEST.md) | Email-ready compute support framing |
 | [METHODOLOGY.md](./METHODOLOGY.md) | Public-safe methodology and disclosure boundary |
+| [DISCLOSURE_POLICY.md](./DISCLOSURE_POLICY.md) | Explicit public/private/NDA disclosure boundary |
 | [results/300m_scale_comparison.md](./results/300m_scale_comparison.md) | 300M parameter-matched comparison |
 | [results/1b_pilot_convergence.md](./results/1b_pilot_convergence.md) | 1B pilot convergence note |
 | [results/2026_04_public_diagnostics.md](./results/2026_04_public_diagnostics.md) | April 2026 public-safe diagnostic snapshot |
+| [results/2026_04_context_efficiency_private_track.md](./results/2026_04_context_efficiency_private_track.md) | Public-safe summary of the private context-efficiency track |
 | [results/structured_tasks.md](./results/structured_tasks.md) | Structured-task benchmark summary |
 | [data/300m_comparison.json](./data/300m_comparison.json) | Machine-readable 300M result data |
 | [data/1b_pilot_results.json](./data/1b_pilot_results.json) | Machine-readable 1B pilot data |
 | [data/2026_04_public_diagnostics.json](./data/2026_04_public_diagnostics.json) | Machine-readable April 2026 public-safe diagnostics |
+| [data/2026_04_context_efficiency_private_track.json](./data/2026_04_context_efficiency_private_track.json) | Machine-readable public-safe context-efficiency track summary |
 
 Tables are treated as canonical. Images and plots, when present, are auxiliary only.
 
@@ -111,6 +134,7 @@ The highest-value next step is not one huge blind scale run. It is a set of care
 | Question | Why it matters |
 |---|---|
 | Does the structural-transfer signal survive at 100M+ and 1B+? | This tests whether the current 66.5M signal is a scaling direction or a small-model artifact. |
+| Can compact byte-level models improve usable context efficiency? | This tests whether compression pressure can reduce some raw-context disadvantage without exposing a reproduction path. |
 | Do broader text/code/math mixtures improve external tasks without destroying structured transfer? | This tests whether LUMI is becoming more general, not merely better at one diagnostic domain. |
 | Can instruction-style behavior be added without erasing base capability? | This tests whether conversation ability is a conversion of base capability or just superficial tuning. |
 | Which failures are architecture failures vs data/curriculum failures? | This determines whether scaling is justified. |
@@ -139,6 +163,7 @@ What is not being offered:
 | 300M controlled compression comparison | Public result available |
 | 1B pilot | Public convergence note available |
 | 66.5M 2026 diagnostics | Public-safe summary available |
+| context-efficiency track | Private diagnostic track, public-safe motivation available |
 | broad assistant/chat capability | Not yet established |
 | next major need | controlled 100M+ and 1B+ compute |
 
